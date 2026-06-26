@@ -90,7 +90,6 @@ export function ExpenseForm({
         fullWidth
         required
         max={date}
-        defaultValue={date}
       />
 
       <div style={buttonGroupStyle}>
