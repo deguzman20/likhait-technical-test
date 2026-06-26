@@ -22,10 +22,10 @@ export async function fetchExpenses(): Promise<Expense[]> {
  */
 export async function getExpenses(
   year: number,
-  month: number,
+  month: number
 ): Promise<Expense[]> {
   const response = await fetch(
-    `${API_BASE_URL}/expenses?year=${year}&month=${month}`,
+    `${API_BASE_URL}/expenses?year=${year}&month=${month}`
   );
   if (!response.ok) {
     throw new Error("Failed to fetch expenses");
@@ -81,7 +81,7 @@ export async function createExpense(data: ExpenseFormData): Promise<Expense> {
  */
 export async function updateExpense(
   id: number,
-  data: Partial<ExpenseFormData>,
+  data: Partial<ExpenseFormData>
 ): Promise<Expense> {
   const response = await fetch(`${API_BASE_URL}/expenses/${id}`, {
     method: "PUT",
@@ -108,5 +108,61 @@ export async function deleteExpense(id: number): Promise<void> {
 
   if (!response.ok) {
     throw new Error("Failed to delete expense");
+  }
+}
+
+/**
+ * Update an existing category
+ */
+export async function updateCategory(
+  id: number,
+  name: string
+): Promise<{ id: number; name: string }> {
+  const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ category: { name } }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update category");
+  }
+
+  return response.json();
+}
+
+/**
+ * Create a new category
+ */
+export async function createCategory(
+  name: string
+): Promise<{ id: number; name: string }> {
+  const response = await fetch(`${API_BASE_URL}/categories`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ category: { name } }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create category");
+  }
+
+  return response.json();
+}
+
+/**
+ * Delete a category
+ */
+export async function deleteCategory(id: number): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete category");
   }
 }

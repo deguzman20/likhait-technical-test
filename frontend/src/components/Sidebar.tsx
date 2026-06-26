@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { COLORS } from "../constants/colors";
 
 interface SidebarProps {
@@ -14,6 +14,16 @@ const Sidebar: React.FC<SidebarProps> = ({
   isCollapsed = false,
   onToggleCollapse,
 }) => {
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+
+  const isCategoriesActive = currentPage === "categories";
+
+  const categoriesBackground = isCategoriesActive
+    ? COLORS.primary.p03
+    : hoveredNav === "categories"
+    ? COLORS.primary.p02
+    : "transparent";
+
   const sidebarStyle: React.CSSProperties = {
     width: isCollapsed ? "80px" : "360px",
     height: "100vh",
@@ -140,7 +150,11 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       <nav style={navStyle}>
         <button
-          style={navItemStyle}
+          style={{
+            ...navItemStyle,
+            background:
+              currentPage === "history" ? COLORS.primary.p03 : "transparent",
+          }}
           onClick={() => onNavigate?.("history")}
           onMouseEnter={(e) => {
             if (currentPage !== "history") {
@@ -167,6 +181,28 @@ const Sidebar: React.FC<SidebarProps> = ({
             <line x1="3" y1="10" x2="21" y2="10" />
           </svg>
           <span style={navTextStyle}>History</span>
+        </button>
+        <button
+          style={{
+            ...navItemStyle,
+            background: categoriesBackground,
+          }}
+          onClick={() => onNavigate?.("categories")}
+          onMouseEnter={() => setHoveredNav("categories")}
+          onMouseLeave={() => setHoveredNav(null)}
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+          </svg>
+
+          <span style={navTextStyle}>Categories</span>
         </button>
       </nav>
     </aside>
