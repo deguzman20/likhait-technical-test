@@ -16,7 +16,7 @@ RSpec.describe Expense, type: :model do
 
       it 'is invalid' do
         expect(expense).not_to be_valid
-        expect(expense.errors[:date]).to include("must be less than or equal to #{Date.today}")
+        expect(expense.errors[:date]).to include("must be earlier or today")
       end
     end
 
