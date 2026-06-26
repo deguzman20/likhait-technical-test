@@ -44,6 +44,8 @@ export function ExpenseForm({
     label: category,
   }));
 
+  const date = new Date().toISOString().split("T")[0];
+
   return (
     <form onSubmit={handleSubmit} style={formStyle}>
       <TextField
@@ -87,6 +89,7 @@ export function ExpenseForm({
         error={errors.date}
         fullWidth
         required
+        max={date}
       />
 
       <div style={buttonGroupStyle}>

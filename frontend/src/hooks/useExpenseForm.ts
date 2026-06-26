@@ -30,24 +30,42 @@ export function useExpenseForm({ initialData, onSubmit }: UseExpenseFormProps) {
     }
   };
 
+  // Helper function to validate a single field
+  const validateField = (
+    field: keyof ExpenseFormData,
+    value: string
+  ): string | undefined => {
+    switch (field) {
+      case "amount":
+        if (!value || Number(value) <= 0)
+          return "Amount must be greater than 0";
+        break;
+      case "description":
+        if (!value.trim()) return "Description is required";
+        break;
+      case "category":
+        if (!value) return "Category is required";
+        break;
+      case "date":
+        if (!value) return "Date is required";
+        if (
+          new Date(value) > new Date(new Date().toISOString().split("T")[0])
+        ) {
+          return "The date cannot be in the future.";
+        }
+        break;
+    }
+    return undefined;
+  };
+
   const validateForm = (): boolean => {
     const newErrors: Partial<ExpenseFormData> = {};
 
-    if (!formData.amount || Number(formData.amount) <= 0) {
-      newErrors.amount = "Amount must be greater than 0";
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
-    }
-
-    if (!formData.category) {
-      newErrors.category = "Category is required";
-    }
-
-    if (!formData.date) {
-      newErrors.date = "Date is required";
-    }
+    Object.keys(formData).forEach((key) => {
+      const field = key as keyof ExpenseFormData;
+      const error = validateField(field, formData[field] || "");
+      if (error) newErrors[field] = error;
+    });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
